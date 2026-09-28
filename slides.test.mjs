@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {sanitizeInput,generateDeck} from './slides.mjs';
+test('ten editable slides and strict facts',async()=>{const x=sanitizeInput({title:'정기 모임',stocks:[{name:'A',code:'000001',price:1000,changePct:-2,asOf:'2026-09-25',source:'KRX'}]});const p=generateDeck(x);assert.equal(p._slides.length,10);const buf=await p.write({outputType:'nodebuffer'});assert.ok(buf.length>20000);assert.ok(buf.subarray(0,2).equals(Buffer.from('PK')))});
+test('blank numeric fields stay absent',()=>{const x=sanitizeInput({stocks:[{name:'A',price:''}]});assert.equal(x.stocks[0].price,null);assert.equal(x.stocks[0].changePct,null)});
